@@ -3,8 +3,14 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
-const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "my_verify_token_123";
+const VERIFY_TOKEN = process.env.VERIFY_TOKEN || "AhmedMessenger2026";
 
+// Health check
+app.get("/health", (req, res) => {
+  res.status(200).send("OK");
+});
+
+// Facebook Messenger verification
 app.get("/webhook", (req, res) => {
   const mode = req.query["hub.mode"];
   const token = req.query["hub.verify_token"];
@@ -18,6 +24,7 @@ app.get("/webhook", (req, res) => {
   return res.sendStatus(403);
 });
 
+// Receive Messenger events
 app.post("/webhook", (req, res) => {
   console.log("Messenger event:", JSON.stringify(req.body, null, 2));
   res.status(200).send("EVENT_RECEIVED");
